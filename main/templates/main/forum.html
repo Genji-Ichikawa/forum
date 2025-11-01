@@ -11,11 +11,19 @@
       <tr>
         <th>投稿内容</th>
         <th>投稿日時</th>
+        <th>操作</th>
       </tr>
       {% for message in messages %}
         <tr>
           <td>{{ message.content }}</td>
           <td>{{ message.created_at }}</td>
+          <td>
+            <form action="{% url 'delete_message' topic.name message.pk %}"
+                  method="post">
+              {% csrf_token %}
+              <input type="submit" value="削除">
+            </form>
+          </td>
         </tr>
       {% endfor %}
     </table>
