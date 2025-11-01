@@ -1,17 +1,25 @@
 from django.shortcuts import render
 
-from main.models import *
+from .models import Message, Topic
 
 
 def index(request):
-    topic_list = Topic.objects.all()
-    context = {"topics": topic_list}
+    TOPIC_LIST = Topic.objects.all()
+    context = {
+        "topics": TOPIC_LIST,
+    }
     return render(request, "main/index.html", context)
 
 
 def forum(request, topic_name):
     topic = Topic.objects.get(name=topic_name)
     messages = Message.objects.filter(topic=topic).order_by("created_at")
+    if request.method == "POST":
+        message = request.POST["message"]
+        Message.objects.create(
+            topic=topic,
+            content=message,
+        )
     context = {
         "messages": messages,
         "topic": topic,
